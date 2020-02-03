@@ -9,7 +9,7 @@ class DadBot(Plugin):
         await evt.mark_read()
         self.log.debug(f"dadbot matched {match}")
         ## check for word
-        if match[1] != None: ## check group 1
+        if match[1] is not None: ## check group 1
             result = f"Hi {match[1]} I'm Dadbot"
         else:
             result = f"Hi ERROR I'm Dabdort"
