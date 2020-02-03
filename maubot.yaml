@@ -1,0 +1,6 @@
+maubot: 0.1.0
+id: pegues.party.dadbot
+version: 0.0.1
+modules:
+- dadbot
+main_class: DadBot
