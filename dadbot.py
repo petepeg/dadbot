@@ -2,15 +2,22 @@ from maubot import Plugin, MessageEvent
 from maubot.handlers import command
 from typing import List, Tuple
 from random import choice
+import re
 
 class DadBot(Plugin):
     @command.passive(r"\bi['’]?m\s+(\w+)", case_insensitive=True) ## return word after im 
     async def handler(self, evt: MessageEvent, match: tuple) -> None:
         await evt.mark_read()
         self.log.debug(f"dadbot matched {match}")
-        ## check for word
-        if match[1] is not None: ## check group 1
-            result = f"Hi {match[1]} I'm Dadbot"
+        if match: # check for match
+            excp_list = ["a", "an", "on", "in", "at" ] # exception matches
+            if match[1] in excp_list: # check if it's an a
+                reg = r"\b%s\s+(\w+)" %(match[1])
+                new_match = re.search(reg,match[0], re.IGNORECASE)
+                result = (f"Hi {new_match.group()} I'm dad")
+        ## Normal respone
+            else:
+                result = f"Hi {match[1]} I'm Dadbot"
         else:
             result = f"Hi ERROR I'm Dabdort"
         await evt.reply(result, allow_html=True)
