@@ -2,6 +2,7 @@ from maubot import Plugin, MessageEvent
 from maubot.handlers import command
 from typing import List, Tuple
 from random import choice
+from random import randint
 import re
 
 
@@ -9,30 +10,32 @@ class DadBot(Plugin):
     # return word after im
     @command.passive(r"\bi['’]?m\s+(\w+)", case_insensitive=True)
     async def handler(self, evt: MessageEvent, match: tuple) -> None:
-        # match[0] whole string, match[1] returned value
-        await evt.mark_read()
-        self.log.debug(f"dadbot matched {match}")
+        dad_int = randint(1,100)
+        if dad_int <= 25:
+            # match[0] whole string, match[1] returned value
+            await evt.mark_read()
+            self.log.debug(f"dadbot matched {match}")
 
-        if match:
-            # exception matches
-            excp_list = ["a", "an", "on", "in", "at"]
-            # feed returned value into new reg
-            reg = r"\b%s\s+(\w+)" % (match[1])
-            new_match = re.search(reg, match[0], re.IGNORECASE)
+            if match:
+                # exception matches
+                excp_list = ["a", "an", "on", "in", "at"]
+                # feed returned value into new reg
+                reg = r"\b%s\s+(\w+)" % (match[1])
+                new_match = re.search(reg, match[0], re.IGNORECASE)
+                
+                # Exception response
+                if match[1] in excp_list and new_match:
+                    result = (f"Hi {new_match.group()} I'm dad")
+                
+                # Normal response
+                else:
+                    result = f"Hi {match[1]} I'm Dadbot"
             
-            # Exception response
-            if match[1] in excp_list and new_match:
-                result = (f"Hi {new_match.group()} I'm dad")
-            
-            # Normal response
+            # Empty match
             else:
-                result = f"Hi {match[1]} I'm Dadbot"
-        
-        # Empty match
-        else:
-            result = f"Hi ERROR I'm Dabdort"
+                result = f"Hi ERROR I'm Dabdort"
 
-        await evt.reply(result, allow_html=True)
+            await evt.reply(result, allow_html=True)
 
     # Give the user an uplifting message
     @command.new("validation")
